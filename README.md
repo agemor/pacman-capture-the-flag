@@ -5,7 +5,7 @@ Please follow above link for more details about the game.
 
 
 ## What have been changed?
-- Agents now have limits in carrying pallets
+- Agents now have limits in carrying pellets
 
 ## License
 Please refer [LICENSE](LICENSE) 
