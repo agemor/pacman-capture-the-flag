@@ -72,6 +72,7 @@ TOTAL_FOOD = 60
 DUMP_FOOD_ON_DEATH = True # if we have the gameplay element that dumps dots on death
 
 SCARED_TIME = 40
+CARRY_LIMIT = 5
 
 def noisyDistance(pos1, pos2):
   return int(util.manhattanDistance(pos1, pos2) + random.choice(SONAR_NOISE_VALUES))
@@ -508,7 +509,6 @@ class AgentRules:
         if redCount >= (TOTAL_FOOD//2) - MIN_FOOD or blueCount >= (TOTAL_FOOD//2) - MIN_FOOD:
           state.data._win = True
 
-
     if agentState.isPacman and manhattanDistance( nearest, next ) <= 0.9 :
       AgentRules.consume( nearest, state, state.isOnRedTeam(agentIndex) )
 
@@ -521,26 +521,30 @@ class AgentRules:
 
       # blue case is the default
       teamIndicesFunc = state.getBlueTeamIndices
-      score = -1
       if isRed:
         # switch if its red
-        score = 1
         teamIndicesFunc = state.getRedTeamIndices
 
       # go increase the variable for the pacman who ate this
       agents = [state.data.agentStates[agentIndex] for agentIndex in teamIndicesFunc()]
+      thisAgent = None
       for agent in agents:
         if agent.getPosition() == position:
-          agent.numCarrying += 1
+          thisAgent = agent
           break # the above should only be true for one agent...
 
-      # do all the score and food grid maintainenace 
-      #state.data.scoreChange += score
-      state.data.food = state.data.food.copy()
-      state.data.food[x][y] = False
-      state.data._foodEaten = position
-      #if (isRed and state.getBlueFood().count() == MIN_FOOD) or (not isRed and state.getRedFood().count() == MIN_FOOD):
-      #  state.data._win = True
+      if thisAgent.numCarrying < CARRY_LIMIT:
+        agent.numCarrying += 1
+        score = -1
+        if isRed:
+          score = 1
+        # do all the score and food grid maintainenace 
+        #state.data.scoreChange += score
+        state.data.food = state.data.food.copy()
+        state.data.food[x][y] = False
+        state.data._foodEaten = position
+        #if (isRed and state.getBlueFood().count() == MIN_FOOD) or (not isRed and state.getRedFood().count() == MIN_FOOD):
+        #  state.data._win = True
 
     # Eat capsule
     if isRed: myCapsules = state.getBlueCapsules()
