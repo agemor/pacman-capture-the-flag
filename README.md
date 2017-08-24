@@ -5,6 +5,8 @@ Please follow above link for more details about the game.
 
 
 ## What have been changed?
+- Ported to *Python3* code
+- Agents moving faster
 - Agents now have limits in carrying pellets
 
 ## License
